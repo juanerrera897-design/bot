@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import random
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -26,5 +27,16 @@ async def saludo(ctx):
 async def suma(ctx,a1:int, b2:int):
    await ctx.send(f"tu suma es {a1 + b2}    ")
 
+@bot.command()
+async def roll(ctx, dice: str):
+    """Rolls a dice in NdN format."""
+    try:
+        rolls, limit = map(int, dice.split('d'))
+    except Exception:
+        await ctx.send('Format has to be in NdN!')
+        return
+
+    result = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
+    await ctx.send(result)
 
 bot.run("")
