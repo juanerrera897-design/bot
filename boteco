@@ -1,0 +1,70 @@
+import discord
+from discord.ext import commands
+import random 
+import os
+#Ejercicio Adicional
+intents = discord.Intents.default()
+intents.message_content = True
+bot = commands.Bot(command_prefix='/', intents=intents)
+
+@bot.event
+async def hola():
+    print(f'Ha iniciado sesión como {bot.user}')
+
+@bot.command()
+async def meme(ctx):
+    imagenes = os.listdir("as")
+    imagen_elegida = random.choice(imagenes)
+    with open(f"as/{imagen_elegida}", "rb") as f:
+        picture = discord.File(f)
+        await ctx.send(file=picture)
+
+@bot.command()
+async def hola(ctx):
+    await ctx.send(f"¡Hola {ctx.author.mention}! 👋 ¿Cómo estás?")
+
+
+
+
+
+#Comando de leo
+@bot.command()
+async def tiempo(ctx, product: str):
+    products = {
+        "plastico": "El plástico puede tardar hasta 500 años en descomponerse. ",
+        "lata": "Las latas de aluminio pueden tardar entre 80 y 200 años en descomponerse. ",
+        "vidrio": "El vidrio puede tardar hasta 1 millón de años en descomponerse. ",
+        "papel": "El papel tarda entre 2 y 6 semanas en descomponerse."
+    }
+
+    product_key = product.lower()
+    if product_key in products:
+        tiempo = products[product_key]
+    else:
+        tiempo = ("No tengo información sobre ese producto. "
+                  "Intenta con 'plastico', 'lata', 'vidrio' o 'papel'.")
+
+    await ctx.send(tiempo)
+
+
+@bot.command()
+async def imagen(ctx):
+    import os
+    # Asegura que la carpeta existe
+    if "imagenes" not in os.listdir():
+        return await ctx.send("No se encontró la carpeta 'imagenes'.")
+
+    # Ruta a la imagen
+    image_path = "imagenes/ecobot.jpg"
+
+    # Verifica que el archivo exista
+    if not os.path.isfile(image_path):
+        return await ctx.send("No encontré la imagen 'ecobot.jpg'.")
+
+    with open(image_path, "rb") as f:
+        picture = discord.File(f)
+
+    await ctx.send(file=picture)
+
+
+bot.run("")
